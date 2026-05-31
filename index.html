@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LOYZZ STORE - Digital Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            background-attachment: fixed;
+        }
+
+        /* Background pattern overlay biar gak polos */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 8px),
+                repeating-linear-gradient(135deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 1px, transparent 1px, transparent 12px),
+                radial-gradient(circle at 20% 30%, rgba(78,205,196,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255,107,107,0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 20px 20px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD89B, #C7E9FB, #FF6B6B);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+
+        /* Visitor Counter */
+        .visitor-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 20px;
+            margin: 20px auto;
+            text-align: center;
+            max-width: 350px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .visitor-title {
+            font-size: 13px;
+            color: #ddd;
+            letter-spacing: 2px;
+        }
+
+        .visitor-count {
+            font-size: 52px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD89B, #C7E9FB);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-top: 8px;
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .social-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 60px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 14px;
+        }
+
+        .social-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .social-badge {
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .social-card.tiktok .social-badge {
+            background: #ff0050;
+        }
+
+        .social-card.telegram .social-badge {
+            background: #0088cc;
+        }
+
+        .social-card.whatsapp .social-badge {
+            background: #25D366;
+        }
+
+        /* Products Section */
+        .products-title {
+            text-align: center;
+            font-size: 28px;
+            color: white;
+            margin: 50px 0 30px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px 0;
+        }
+
+        .product-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 25px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.15);
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .product-icon {
+            font-size: 56px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 22px;
+            font-weight: 800;
+            color: #FFD89B;
+            margin: 12px 0 8px;
+        }
+
+        .product-desc {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            font-size: 28px;
+            font-weight: 800;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+
+        .price-note {
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        .buy-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 180px;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.5);
+        }
+
+        /* Motivasi Section - lebih aesthetic */
+        .motivation-section {
+            margin: 60px 0 40px;
+            padding: 35px 25px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .motivation-title {
+            font-size: 22px;
+            color: #FFD89B;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .motivation-text {
+            font-size: 17px;
+            color: #f0f0f0;
+            line-height: 1.7;
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .motivation-text p {
+            margin: 12px 0;
+            background: rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Modal Popup */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 30px;
+            border-radius: 32px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .modal-content h3 {
+            font-size: 26px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content .price {
+            font-size: 34px;
+            color: #4CAF50;
+            margin: 15px 0;
+            font-weight: 800;
+        }
+
+        .payment-info {
+            background: rgba(255,255,255,0.08);
+            padding: 18px;
+            border-radius: 20px;
+            margin: 20px 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .payment-info a {
+            color: #4ECDC4;
+            text-decoration: none;
+        }
+
+        .close-modal {
+            background: #ff4757;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .close-modal:hover {
+            background: #ff6b81;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .credit {
+            font-size: 12px;
+            margin-top: 10px;
+            color: #FFD89B;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 34px; }
+            .product-name { font-size: 20px; }
+            .product-price { font-size: 24px; }
+            .social-card { padding: 8px 16px; font-size: 12px; }
+            .products-grid { gap: 20px; }
+            .motivation-text { font-size: 14px; }
+            .motivation-text p { display: block; margin: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">⚡ LOYZZ STORE ⚡</div>
+        <div class="tagline">Premium Digital Products | Best Quality</div>
+    </div>
+
+    <!-- Visitor Counter -->
+    <div class="visitor-card">
+        <div class="visitor-title">👥 TOTAL VISITORS</div>
+        <div class="visitor-count" id="visitorCount">0</div>
+        <div style="font-size: 11px; margin-top: 8px; opacity: 0.7;">realtime updated</div>
+    </div>
+
+    <!-- Social Media Links -->
+    <div class="social-links">
+        <a href="https://www.tiktok.com/@loyzz_officialreal9" target="_blank" class="social-card tiktok">
+            🎵 TikTok @loyzz_officialreal9 <span class="social-badge">[tiktok]</span>
+        </a>
+        <a href="https://t.me/LOYZOFC" target="_blank" class="social-card telegram">
+            📱 Telegram t.me/LOYZOFC <span class="social-badge">[telegram]</span>
+        </a>
+        <a href="https://wa.me/6289526625575" target="_blank" class="social-card whatsapp">
+            💬 WhatsApp 089526625575 <span class="social-badge">[wa]</span>
+        </a>
+    </div>
+
+    <!-- Products Section -->
+    <div class="products-title">
+        🔥 PRODUK KAMI 🔥
+    </div>
+
+    <div class="products-grid">
+        <!-- Produk 1: Murband WA -->
+        <div class="product-card" data-product="Murband WA" data-price="5000">
+            <div class="product-icon">📱💬</div>
+            <div class="product-name">Murband WA</div>
+            <div class="product-desc">WhatsApp Marketing Tools | Auto Broadcast + Bulk Sender</div>
+            <div class="product-price">Rp 5.000</div>
+            <div class="price-note">💰 5k only</div>
+            <button class="buy-btn" onclick="openModal('Murband WA', 5000)">🛒 BELI SEKARANG</button>
+        </div>
+
+        <!-- Produk 2: Script Conqueror Force -->
+        <div class="product-card" data-product="Script Conqueror Force" data-price="0">
+            <div class="product-icon">⚔️👑</div>
+            <div class="product-name">Script Conqueror Force</div>
+            <div class="product-desc">Premium Script | PV/PM via WA atau Telegram</div>
+            <div class="product-price">PV / PM</div>
+            <div class="price-note">💬 Chat admin untuk harga</div>
+            <button class="buy-btn" onclick="openModalConqueror()">💬 HUBUNGI ADMIN</button>
+        </div>
+
+        <!-- Produk 3: Prompt Jailbreak -->
+        <div class="product-card" data-product="Prompt Jailbreak" data-price="3000">
+            <div class="product-icon">🔓🤖</div>
+            <div class="product-name">Prompt Jailbreak</div>
+            <div class="product-desc">Prompt Premium | Unlock AI Limits & Bypass Restrictions</div>
+            <div class="product-price">Rp 3.000</div>
+            <div class="price-note">💰 3k only</div>
+            <button class="buy-btn" onclick="openModal('Prompt Jailbreak', 3000)">🛒 BELI SEKARANG</button>
+        </div>
+
+        <!-- Produk 4: Murid Nokos -->
+        <div class="product-card" data-product="Murid Nokos" data-price="5000">
+            <div class="product-icon">🎓📚</div>
+            <div class="product-name">Murid Nokos</div>
+            <div class="product-desc">Premium Package | Full Access & Tutorial Lengkap</div>
+            <div class="product-price">Rp 5.000</div>
+            <div class="price-note">💰 5k only</div>
+            <button class="buy-btn" onclick="openModal('Murid Nokos', 5000)">🛒 BELI SEKARANG</button>
+        </div>
+
+        <!-- Produk 5: APK Bug WA Catalyst -->
+        <div class="product-card" data-product="APK Bug WA Catalyst" data-price="35000">
+            <div class="product-icon">🐛📲</div>
+            <div class="product-name">APK Bug WA Catalyst</div>
+            <div class="product-desc">Android App | WhatsApp Vulnerability & Exploit Tools</div>
+            <div class="product-price">Rp 35.000</div>
+            <div class="price-note">💰 35k only</div>
+            <button class="buy-btn" onclick="openModal('APK Bug WA Catalyst', 35000)">🛒 BELI SEKARANG</button>
+        </div>
+    </div>
+
+    <!-- Motivasi Section dengan background lebih hidup -->
+    <div class="motivation-section">
+        <div class="motivation-title">💪 KATA-KATA MOTIVASI 💪</div>
+        <div class="motivation-text">
+            <p>✨ "Jangan pernah menyerah sebelum mencoba. Setiap kesuksesan dimulai dari langkah kecil." ✨</p>
+            <p>🔥 "Kegagalan adalah batu loncatan menuju kesuksesan. Teruslah bergerak maju!" 🔥</p>
+            <p>🚀 "Hari ini mungkin berat, tapi esok akan lebih baik. Percayalah pada prosesnya." 🚀</p>
+            <p>💎 "Uang bukan segalanya, tapi dengan uang kita bisa mewujudkan banyak mimpi. Jualan terus!" 💎</p>
+            <p>⭐ "Pelanggan adalah raja, kepuasanmu adalah prioritas kami. Makasih udah mampir!" ⭐</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div>© 2024 LOYZZ STORE - All Rights Reserved</div>
+        <div class="credit">✨ create by LOYZZ OFFICIAL ✨</div>
+    </footer>
+</div>
+
+<!-- Modal Popup -->
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalProductName">Product</h3>
+        <div class="price" id="modalPrice">Rp 0</div>
+        <div class="payment-info">
+            💳 <strong>CARA ORDER</strong><br><br>
+            📲 Transfer ke:<br>
+            🏦 BCA / DANA / OVO / GOPAY<br><br>
+            📞 Konfirmasi ke admin:<br>
+            👉 <a href="https://t.me/LOYZOFC" target="_blank">Telegram: @LOYZOFC</a><br>
+            👉 <a href="https://wa.me/6289526625575" target="_blank">WhatsApp: 089526625575</a><br><br>
+            📌 Kirim bukti transfer + nama produk<br>
+            ✅ File akan dikirim maksimal 10 menit
+        </div>
+        <button class="close-modal" onclick="closeModal()">Tutup</button>
+    </div>
+</div>
+
+<script>
+    // ========== VISITOR COUNTER ==========
+    let visitorCount = localStorage.getItem('loyzz_visitor_store');
+    if (!visitorCount) {
+        visitorCount = Math.floor(Math.random() * 200) + 200;
+        localStorage.setItem('loyzz_visitor_store', visitorCount);
+    } else {
+        visitorCount = parseInt(visitorCount);
+        visitorCount++;
+        localStorage.setItem('loyzz_visitor_store', visitorCount);
+    }
+    document.getElementById('visitorCount').innerText = visitorCount.toLocaleString('id-ID');
+
+    // ========== MODAL FUNCTIONS ==========
+    function openModal(productName, price) {
+        const modal = document.getElementById('orderModal');
+        const modalProduct = document.getElementById('modalProductName');
+        const modalPrice = document.getElementById('modalPrice');
+        
+        modalProduct.innerText = productName;
+        modalPrice.innerText = 'Rp ' + price.toLocaleString('id-ID');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function openModalConqueror() {
+        const modal = document.getElementById('orderModal');
+        const modalProduct = document.getElementById('modalProductName');
+        const modalPrice = document.getElementById('modalPrice');
+        
+        modalProduct.innerText = 'Script Conqueror Force';
+        modalPrice.innerText = 'Hubungi Admin';
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+        const modal = document.getElementById('orderModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+    
+    window.onclick = function(event) {
+        const modal = document.getElementById('orderModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+    
+    // Animasi card hover
+    const cards = document.querySelectorAll('.product-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-8px)';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0)';
+        });
+    });
+    
+    console.log('🔥 LOYZZ STORE | Visitor: ' + visitorCount);
+    console.log('✨ create by LOYZZ OFFICIAL ✨');
+</script>
+
+</body>
+</html>
